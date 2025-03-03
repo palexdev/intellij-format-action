@@ -1,13 +1,11 @@
-FROM ubuntu:latest
+FROM alpine:latest
 LABEL authors="notdevcody"
 
-RUN apt-get update \
-    && apt-get install -y bash git wget \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk update \
+    && apk add --no-cache bash git wget openjdk17 e2fsprogs github-cli
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chown -R ${USER}:${USER} /usr/local/bin/entrypoint.sh \
+RUN chown -R root:root /usr/local/bin/entrypoint.sh \
     && chmod +x /usr/local/bin/entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

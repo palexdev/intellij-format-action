@@ -1,45 +1,59 @@
 ---
 name: IntelliJ Code Format
 description: |
-  Runs the IntelliJ formatter to apply the IDE style rules.
+  Format your code automatically using the IntelliJ formatter.
 inputs:
   path:
     description: |
-      Path to project directory. The formatter is executed recursively from here. Must be relative to the workspace.
+      Path to a directory which the formatter is executed recursively from. Must be relative to the workspace.
     required: false
-    default: '.'
+    default: "."
   include-glob:
     description: |
       Pattern for files to include. Supports glob-style wildcards. Multiple patterns can be separated by commas.
     required: false
-    default: '*'
-  commit-on-changes:
-    description: If true, the action will commit if any file changed.
-    required: false
-    default: 'true'
-  commit-message:
+    default: "*.*"
+  push-type:
     description: |
-      The commit message to use when committing. Only used if commit-on-changes is true.
+      Type of push to perform. Options are 'commit', 'pull-request' or 'none'.
     required: false
-    default: 'IntelliJ Code Format'
+    default: "pull-request"
+  push-title:
+    description: |
+      The title to use for the commit or pull request.
+    required: false
+    default: "IntelliJ Code Format"
+  push-description:
+    description: |
+      The description to use for the pull request.
+    required: false
+    default: ""
   fail-on-changes:
-    description: If true, the action will fail if any file changed.
+    description: Fail if any files were changed by the formatter.
     required: false
-    default: 'true'
+    default: "true"
   style-settings-file:
-    description: A path to IntelliJ IDEA code style settings .xml file.
+    description: |
+      A path to IntelliJ IDEA code style settings .xml file.
+      Leave default if you want the formatter to use .editorconfig files.
     required: false
-    default: 'unset'
+    default: "unset"
+  mute-formatter-output:
+    description: Mute the formatter output. Action output will still be logged.
+    required: false
+    default: "true"
 outputs:
   files-changed:
-    description: Zero if none changed, greater if at least one file changed.
+    description: Zero if none changed, greater if at least one file was formatted.
 runs:
   using: docker
   image: Dockerfile
   args:
     - ${{ inputs.path }}
     - ${{ inputs.include-glob }}
-    - ${{ inputs.commit-on-changes }}
-    - ${{ inputs.commit-message }}
+    - ${{ inputs.push-type }}
+    - ${{ inputs.push-title }}
+    - ${{ inputs.push-description }}
     - ${{ inputs.fail-on-changes }}
     - ${{ inputs.style-settings-file }}
+    - ${{ inputs.mute-formatter-output }}
