@@ -12,7 +12,7 @@ check_idea_version() {
   if [[ -d "$IDEA_DIR/bin" ]]; then
     local output
     output=$(IDEA_JDK="/usr/lib/jvm/java-17-openjdk" "$IDEA_DIR/bin/idea.sh" --version 2>/dev/null || true)
-    if [[ "$output" == *"2024.3.4"* ]]; then
+    if [[ "$output" == *"2025.1.3"* ]]; then
       echo "Valid IntelliJ IDEA version found."
       echo "Using cached files at $IDEA_DIR."
     else
