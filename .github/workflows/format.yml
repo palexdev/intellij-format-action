@@ -26,3 +26,4 @@ jobs:
         with:
           path: test/
           push-type: "none"
+          fail-on-changes: false
