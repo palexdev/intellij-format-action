@@ -5,7 +5,8 @@ A GitHub Action that formats your code using the IntelliJ formatter.
 ## Examples
 
 Both examples implement caching of downloaded IDEA files (~900MB). <br>
-Cache generation might take a while on the first run, but saves bandwidth and is faster later on.
+Cache generation might take a while on the first run, but saves bandwidth and is faster later on. <br>
+**NOTE: If the actions fails due to the formatting changing files, cache will not be saved.**
 
 Formats all files that are supported by the formatter in your repository and creates a pull request with the changes whenever there's a push to the `main` branch:
 
@@ -26,7 +27,7 @@ jobs:
         with:
           path: /home/runner/work/_temp/_github_workflow/idea-cache
           key: ${{ runner.os }}-idea-cache
-      - uses: notdevcody/intellij-format-action@v3
+      - uses: notdevcody/intellij-format-action@v3.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -59,7 +60,7 @@ jobs:
         with:
           path: /home/runner/work/_temp/_github_workflow/idea-cache
           key: ${{ runner.os }}-idea-cache
-      - uses: notdevcody/intellij-format-action@v3
+      - uses: notdevcody/intellij-format-action@v3.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -92,7 +93,7 @@ jobs:
         with:
           path: /home/runner/work/_temp/_github_workflow/idea-cache
           key: ${{ runner.os }}-idea-cache
-      - uses: notdevcody/intellij-format-action@v3
+      - uses: notdevcody/intellij-format-action@v3.1
         push-type: "commit"
 ```
 
