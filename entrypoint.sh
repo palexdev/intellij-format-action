@@ -2,7 +2,7 @@
 set -e
 
 download_idea() {
-  wget --no-verbose -O /tmp/idea.tar.gz https://download.jetbrains.com/idea/ideaIC-2025.1.3.tar.gz
+  wget --no-verbose -O /tmp/idea.tar.gz https://download.jetbrains.com/idea/ideaIC-$idea_version.tar.gz
   mkdir -p "$IDEA_DIR"
   tar xzf /tmp/idea.tar.gz -C "$IDEA_DIR" --strip-components=1
   rm /tmp/idea.tar.gz
@@ -12,7 +12,7 @@ check_idea_version() {
   if [[ -d "$IDEA_DIR/bin" ]]; then
     local output
     output=$(IDEA_JDK="/usr/lib/jvm/java-17-openjdk" "$IDEA_DIR/bin/idea.sh" --version 2>/dev/null || true)
-    if [[ "$output" == *"2025.1.3"* ]]; then
+    if [[ "$output" == *"$idea_version"* ]]; then
       echo "Valid IntelliJ IDEA version found."
       echo "Using cached files at $IDEA_DIR."
     else
@@ -26,19 +26,20 @@ check_idea_version() {
   fi
 }
 
-if [[ $# -ne 8 ]]; then
-  echo "Exactly 8 parameters required: path, include-glob, push-type, push-title, push-description, fail-on-changes, style-settings-file, mute-formatter-output"
+if [[ $# -ne 9 ]]; then
+  echo "Exactly 9 parameters required: idea-version, path, include-glob, push-type, push-title, push-description, fail-on-changes, style-settings-file, mute-formatter-output"
   exit 1
 fi
 
-base_path=$1
-include_pattern=$2
-push_type=$3
-push_title=$4
-push_description=$5
-fail_on_changes=$6
-style_settings_file=$7
-mute_formatter_output=$8
+idea_version=$1
+base_path=$2
+include_pattern=$3
+push_type=$4
+push_title=$5
+push_description=$6
+fail_on_changes=$7
+style_settings_file=$8
+mute_formatter_output=$9
 
 style_flags="-allowDefaults"
 
@@ -46,7 +47,7 @@ if [[ "$style_settings_file" != "unset" ]]; then
   style_flags="-s $style_settings_file"
 fi
 
-IDEA_DIR=${IDEA_CACHE_DIR:-"/github/workflow/idea-cache"}
+IDEA_DIR="/github/workflow/idea-cache"
 
 check_idea_version
 
@@ -60,7 +61,7 @@ else
   output_redirect=""
 fi
 
-eval IDEA_JDK="/usr/lib/jvm/java-17-openjdk" "$IDEA_DIR/bin/format.sh" -m "$include_pattern" $style_flags -r . $output_redirect
+eval IDEA_JDK="/usr/lib/jvm/java-21-openjdk" "$IDEA_DIR/bin/format.sh" -m "$include_pattern" $style_flags -r . $output_redirect
 
 changed_files=$(git status --short)
 changed_files_count=$(echo "$changed_files" | grep -v -e '^$' | wc -l)

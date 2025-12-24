@@ -3,6 +3,11 @@ name: IntelliJ Code Format
 description: |
   Format your code automatically using the IntelliJ formatter.
 inputs:
+  idea-version:
+    description: |
+      IDEA version to use
+    required: false
+    default: "2025.2.6"
   path:
     description: |
       Path to a directory which the formatter is executed recursively from. Must be relative to the workspace.
@@ -49,6 +54,7 @@ runs:
   using: docker
   image: Dockerfile
   args:
+    - ${{ inputs.idea-version }}
     - ${{ inputs.path }}
     - ${{ inputs.include-glob }}
     - ${{ inputs.push-type }}
